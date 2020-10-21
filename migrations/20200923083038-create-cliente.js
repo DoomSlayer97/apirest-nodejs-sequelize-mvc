@@ -36,6 +36,14 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: 0
       },
+      tipoCreditoId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      proyectoId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

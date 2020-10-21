@@ -15,11 +15,16 @@ module.exports = (sequelize, DataTypes) => {
         as: "actividades"
       });
 
+      this.belongsTo(models.TipoCredito, {
+        as: "tipoCredito",
+        foreignKey: "tipoCreditoId"
+      });
+
     }
   };
   Cliente.init({
     nombres: DataTypes.STRING,
-    apellidoPat: {
+    apellidoPat: {  
       type: DataTypes.STRING
     },
     apellidoMat: {
@@ -40,10 +45,18 @@ module.exports = (sequelize, DataTypes) => {
     fechaNacimiento: {
       type: DataTypes.DATE
     },
+    proyectoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },  
     regStatus: {
       type: DataTypes.BOOLEAN,
       defaultValue: 0
     },
+    tipoCreditoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   }, {
     tableName: "cliente",
     sequelize,
