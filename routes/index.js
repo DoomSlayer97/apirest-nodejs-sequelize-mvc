@@ -14,6 +14,7 @@ routes.use("/usuarios/", jwtAuthMiddleware, apiRoutes.usuariosRoutes);
 routes.use("/clientes/", apiRoutes.clientesRoutes);
 routes.use("/actividades/", jwtAuthMiddleware, apiRoutes.actividadesRoutes);
 routes.use("/comentarios/", jwtAuthMiddleware, apiRoutes.comentariosRoutes);
+routes.use("/tiposcredito/", jwtAuthMiddleware, apiRoutes.tipoCreditoRoutes);
 
 module.exports = routes;
 

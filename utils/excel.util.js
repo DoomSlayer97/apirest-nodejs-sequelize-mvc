@@ -5,12 +5,15 @@ module.exports.clientesExcel = class clientesExcel {
   constructor() {
 
     this.rowHeaders = [
-      "NOMBRES",
-      "APELLIDO PATERNO",
-      "APELLIDO MATERNO",
-      "CORREO",
-      "TELEFONO"
+      { name: "NOMBRES", value: "nombres" },
+      { name: "APELLIDO PATERNO", value: "apellidoPat" },
+      { name: "APELLIDO MATERNO", value: "apellidoMat" },
+      { name: "CORREO", value: "email" },
+      { name: "TELEFONO", value: "tel" }
+      
     ];
+
+    this.dataRows = [];
     
     this.wb = new xl.Workbook();
 
@@ -18,9 +21,12 @@ module.exports.clientesExcel = class clientesExcel {
 
   }
 
+  setDataRows(data) { this.dataRows = data }
+
   buildDocument(res = null) {
 
     this.buildTitle();
+    this.buildRowsContent();
 
     return this.wb.write("clientes.xlsx", res);
 
@@ -41,10 +47,30 @@ module.exports.clientesExcel = class clientesExcel {
     this.rowHeaders.forEach((item, index) => {
 
       this.mainWorkSheet.cell(1, (index + 1))
-        .string(item)
+        .string(item.name)
         .style(cellStyle);
 
     });
+
+  }
+
+  buildRowsContent() {
+
+    this.rowHeaders.forEach((itemHeader, indexHeader) => {
+      
+      let rowIndex = 2;
+
+      this.dataRows.forEach((item) => {
+  
+        this.mainWorkSheet.cell(rowIndex, indexHeader + 1)
+          .string(item[itemHeader.value]);
+        
+        rowIndex++;
+  
+      });
+
+    })
+
 
   }
 

@@ -32,6 +32,10 @@ module.exports = {
       fechaNacimiento: {
         type: Sequelize.DATE
       },
+      tipoCreditoId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       regStatus: {
         type: Sequelize.BOOLEAN,
         defaultValue: 0

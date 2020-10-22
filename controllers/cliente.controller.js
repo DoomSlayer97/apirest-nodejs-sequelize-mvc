@@ -1,13 +1,29 @@
-const { Cliente } = require("../models");
+const { Cliente, TipoCredito } = require("../models");
 const validatorjs = require("validatorjs");
 const { Op, literal } = require("sequelize");
 const sequelize = require("sequelize");
-const {  clientesExcel } = require("../utils/excel.util");
+const { clientesExcel } = require("../utils/excel.util");
 
-module.exports.generateSheetDocument = (req, res) => {
+module.exports.generateSheetDocument = async (req, res) => {
   try {
 
     const excel = new clientesExcel();
+
+    const clientesData = await Cliente.findAll({
+      include: {
+        association: "tipoCredito",
+        required: true,
+        attributes: ["name"],
+        nested: false
+      }
+    });
+
+    return res.json({
+      clientesData
+    });
+
+    excel.setDataRows(clientesData);
+
     return excel.buildDocument(res);
     
   } catch (e) {
@@ -31,7 +47,8 @@ module.exports.create = async (req, res) => {
       tel,
       rfc,
       curp,
-      fechaNacimiento
+      fechaNacimiento,
+      tipoCreditoId
     } = req.body;
 
     const validator = new validatorjs(req.body, {
@@ -40,6 +57,7 @@ module.exports.create = async (req, res) => {
       apellidoMat: "required|string",
       email: "required|string|email",
       tel: "required|string",
+      tipoCreditoId: "required|integer"
     });
 
     if (validator.fails()) return res.status(500).json({
@@ -55,7 +73,8 @@ module.exports.create = async (req, res) => {
       tel,
       rfc,
       curp,
-      fechaNacimiento
+      fechaNacimiento,
+      tipoCreditoId
     });
 
     return res.status(201).json({

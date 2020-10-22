@@ -1,4 +1,5 @@
-const { TipoCredito } = require("../models")
+const { TipoCredito } = require("../models");
+const validatorjs = require("validatorjs");
 
 module.exports.create = async (req, res) => {
   try {

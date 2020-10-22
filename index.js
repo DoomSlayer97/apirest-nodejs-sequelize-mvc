@@ -1,5 +1,6 @@
 const app = require("./config/app");
 const apiRoutes = require("./routes");
+require('dotenv').config();
 
 app.use("/api/", apiRoutes);
 
