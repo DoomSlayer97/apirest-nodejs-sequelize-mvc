@@ -1,9 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "",
-    "database": "bdnode",
+    "password": "123",
+    "database": "dbcalendario",
     "host": "127.0.0.1",
+    "port": "3310",
     "dialect": "mysql"
   },
   "test": {

@@ -2,6 +2,22 @@ const { Cliente } = require("../models");
 const validatorjs = require("validatorjs");
 const { Op, literal } = require("sequelize");
 const sequelize = require("sequelize");
+const {  clientesExcel } = require("../utils/excel.util");
+
+module.exports.generateSheetDocument = (req, res) => {
+  try {
+
+    const excel = new clientesExcel();
+    return excel.buildDocument(res);
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });
+  }
+}
 
 module.exports.create = async (req, res) => {
   
