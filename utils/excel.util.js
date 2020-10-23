@@ -9,8 +9,9 @@ module.exports.clientesExcel = class clientesExcel {
       { name: "APELLIDO PATERNO", value: "apellidoPat" },
       { name: "APELLIDO MATERNO", value: "apellidoMat" },
       { name: "CORREO", value: "email" },
-      { name: "TELEFONO", value: "tel" }
-      
+      { name: "TELEFONO", value: "tel" },
+      { name: "TIPO DE CREDITO", value: "tipoCredito" },
+      { name: "PROYECTO", value: "proyecto" }
     ];
 
     this.dataRows = [];
@@ -69,8 +70,7 @@ module.exports.clientesExcel = class clientesExcel {
   
       });
 
-    })
-
+    });
 
   }
 

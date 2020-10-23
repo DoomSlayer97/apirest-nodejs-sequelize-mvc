@@ -10,19 +10,29 @@ module.exports.generateSheetDocument = async (req, res) => {
     const excel = new clientesExcel();
 
     const clientesData = await Cliente.findAll({
-      include: {
-        association: "tipoCredito",
-        required: true,
-        attributes: ["name"],
-        nested: false
-      }
+      include: [
+        {
+          association: "tipoCredito",
+          attributes: ["name"]
+        },
+        {
+          association: "proyecto",
+          attributes: ["name"]
+        }
+      ]
     });
 
-    return res.json({
-      clientesData
-    });
-
-    excel.setDataRows(clientesData);
+    let mapedData = clientesData.map((item) => ({
+      nombres: item.nombres,
+      apellidoPat: item.apellidoPat,
+      apellidoMat: item.apellidoMat,
+      email: item.email,
+      tel: item.tel,
+      tipoCredito: item.tipoCredito.name,
+      proyecto: item.proyecto.name
+    }));
+    
+    excel.setDataRows(mapedData);
 
     return excel.buildDocument(res);
     
@@ -48,7 +58,8 @@ module.exports.create = async (req, res) => {
       rfc,
       curp,
       fechaNacimiento,
-      tipoCreditoId
+      tipoCreditoId,
+      proyectoId
     } = req.body;
 
     const validator = new validatorjs(req.body, {
@@ -57,7 +68,8 @@ module.exports.create = async (req, res) => {
       apellidoMat: "required|string",
       email: "required|string|email",
       tel: "required|string",
-      tipoCreditoId: "required|integer"
+      tipoCreditoId: "required|integer",
+      proyectoId: "required|integer",
     });
 
     if (validator.fails()) return res.status(500).json({
@@ -74,7 +86,8 @@ module.exports.create = async (req, res) => {
       rfc,
       curp,
       fechaNacimiento,
-      tipoCreditoId
+      tipoCreditoId,
+      proyectoId
     });
 
     return res.status(201).json({
@@ -101,7 +114,9 @@ module.exports.findAllFilter = async (req, res) => {
     const {
       nombre,
       email,
-      tel
+      tel,
+      tiposCredito,
+      proyectos
     } = req.query;
 
     const whereDynamic = {
@@ -118,7 +133,9 @@ module.exports.findAllFilter = async (req, res) => {
           " ",
           sequelize.col("apellidoMat"),
         ), { [sequelize.Op.like]: `%${nombre}%` },
-      );
+      ); 
+    
+    
     
     if (email)
       whereDynamic.email = {
@@ -129,6 +146,19 @@ module.exports.findAllFilter = async (req, res) => {
       whereDynamic.tel = {
         [Op.like]: `%${tel}%`
       }
+    
+    if (tiposCredito) {
+      whereDynamic.tipoCreditoId = {
+        [Op.like]: `%${tiposCredito}%`
+      }
+    }
+    
+    if (tiposCredito) {
+      whereDynamic.tipoCreditoId = {
+        [Op.like]: `%${tiposCredito}%`
+      }
+     }
+
 
     const clientes = await Cliente.findAll({
       where: whereDynamic,

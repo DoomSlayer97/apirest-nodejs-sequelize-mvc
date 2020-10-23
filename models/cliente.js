@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "tipoCreditoId"
       });
 
+      this.belongsTo(models.Proyecto, {
+        as: "proyecto",
+        foreignKey: "proyectoId"
+      });
+
     }
   };
   Cliente.init({
@@ -46,6 +51,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE
     },
     tipoCreditoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    proyectoId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

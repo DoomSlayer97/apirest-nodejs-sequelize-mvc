@@ -36,6 +36,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      proyectoId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       regStatus: {
         type: Sequelize.BOOLEAN,
         defaultValue: 0
