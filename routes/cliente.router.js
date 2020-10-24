@@ -8,12 +8,14 @@ const {
   updateOne,
   deleteOne,
   findAllFilter,
-  generateSheetDocument
+  generateSheetDocument,
+  generateThousandRegs
 } = require("../controllers/cliente.controller");
 
 routes.post("/", create);
+routes.post("/generate", generateThousandRegs)
 routes.get("/", findAll);
-routes.get("/filter", findAllFilter);
+routes.post("/filter", findAllFilter);
 routes.get("/:id", findOne);
 routes.put("/:id", updateOne);
 routes.delete("/:id", deleteOne);

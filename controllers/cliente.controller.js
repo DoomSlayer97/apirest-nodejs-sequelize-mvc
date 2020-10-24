@@ -3,6 +3,43 @@ const validatorjs = require("validatorjs");
 const { Op, literal } = require("sequelize");
 const sequelize = require("sequelize");
 const { clientesExcel } = require("../utils/excel.util");
+const faker = require("faker");
+
+module.exports.generateThousandRegs = async (req, res) => {
+  try {
+
+    let regsClientes = [];
+
+    for (let i = 0; i < 10000; i++) {
+
+      regsClientes.push({
+        nombres: faker.name.findName(),
+        apellidoMat: faker.name.lastName(),
+        apellidoPat: faker.name.lastName(),
+        email: faker.internet.email(),
+        tel: faker.phone.phoneNumber(),
+        fechaNacimiento: new Date(),
+        tipoCreditoId: 1,
+        proyectoId: 1
+      });
+
+    }
+
+    const clientes = await Cliente.bulkCreate(regsClientes);
+
+    return res.status(201).json({
+      message: "CREATED!",
+      clientes
+    })
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });
+  }
+}
 
 module.exports.generateSheetDocument = async (req, res) => {
   try {
@@ -31,7 +68,7 @@ module.exports.generateSheetDocument = async (req, res) => {
       tipoCredito: item.tipoCredito.name,
       proyecto: item.proyecto.name
     }));
-    
+
     excel.setDataRows(mapedData);
 
     return excel.buildDocument(res);
@@ -117,7 +154,7 @@ module.exports.findAllFilter = async (req, res) => {
       tel,
       tiposCredito,
       proyectos
-    } = req.query;
+    } = req.body;
 
     const whereDynamic = {
       regStatus: false
@@ -135,8 +172,6 @@ module.exports.findAllFilter = async (req, res) => {
         ), { [sequelize.Op.like]: `%${nombre}%` },
       ); 
     
-    
-    
     if (email)
       whereDynamic.email = {
         [Op.like]: `%${email}%`
@@ -147,21 +182,29 @@ module.exports.findAllFilter = async (req, res) => {
         [Op.like]: `%${tel}%`
       }
     
-    if (tiposCredito) {
+    if (tiposCredito)
       whereDynamic.tipoCreditoId = {
         [Op.like]: `%${tiposCredito}%`
-      }
-    }
+      };
     
-    if (tiposCredito) {
+    
+    if (tiposCredito)
       whereDynamic.tipoCreditoId = {
-        [Op.like]: `%${tiposCredito}%`
-      }
-     }
-
+        [Op.in]: tiposCredito
+      };
+    
+    if (proyectos)
+      whereDynamic.proyectoId = {
+        [Op.in]: proyectos
+      };
 
     const clientes = await Cliente.findAll({
       where: whereDynamic,
+      include: [
+        {
+          association: "proyecto"
+        }
+      ],
       attributes: [
         'id',
         'email',
