@@ -1,9 +1,11 @@
-const { Cliente, TipoCredito } = require("../models");
+const { Cliente } = require("../models");
 const validatorjs = require("validatorjs");
-const { Op, literal } = require("sequelize");
+const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const { clientesExcel } = require("../utils/excel.util");
 const faker = require("faker");
+const pager = require("../helpers/paginator.helper");
+const { queryFilter } = require("../helpers/clientes.helper");
 
 module.exports.generateThousandRegs = async (req, res) => {
   try {
@@ -44,6 +46,11 @@ module.exports.generateThousandRegs = async (req, res) => {
 module.exports.generateSheetDocument = async (req, res) => {
   try {
 
+    const {
+      page,
+      items
+    } = req.query;
+    
     const excel = new clientesExcel();
 
     const clientesData = await Cliente.findAll({
@@ -149,57 +156,20 @@ module.exports.findAllFilter = async (req, res) => {
   try {
 
     const {
-      nombre,
-      email,
-      tel,
-      tiposCredito,
-      proyectos
-    } = req.body;
+      page,
+      items
+    } = req.query;
 
-    const whereDynamic = {
-      regStatus: false
-    };
+    const queryParams = queryFilter(req);
+    
+    const clientesCount = await Cliente.count({ where: queryParams });
 
-    if (nombre)
-      whereDynamic.fullname = sequelize.where(
-        sequelize.fn(
-          "concat",
-          sequelize.col("nombres"),
-          " ",
-          sequelize.col("apellidoPat"),
-          " ",
-          sequelize.col("apellidoMat"),
-        ), { [sequelize.Op.like]: `%${nombre}%` },
-      ); 
-    
-    if (email)
-      whereDynamic.email = {
-        [Op.like]: `%${email}%`
-      }
-    
-    if (tel)
-      whereDynamic.tel = {
-        [Op.like]: `%${tel}%`
-      }
-    
-    if (tiposCredito)
-      whereDynamic.tipoCreditoId = {
-        [Op.like]: `%${tiposCredito}%`
-      };
-    
-    
-    if (tiposCredito)
-      whereDynamic.tipoCreditoId = {
-        [Op.in]: tiposCredito
-      };
-    
-    if (proyectos)
-      whereDynamic.proyectoId = {
-        [Op.in]: proyectos
-      };
+    const paginator = pager(clientesCount, page, items);
 
     const clientes = await Cliente.findAll({
-      where: whereDynamic,
+      limit: paginator.itemCount,
+      offset: paginator.offset,
+      where: queryParams,
       include: [
         {
           association: "proyecto"
@@ -216,6 +186,7 @@ module.exports.findAllFilter = async (req, res) => {
     });
 
     return res.json({
+      paginator,
       clientes
     });
     
