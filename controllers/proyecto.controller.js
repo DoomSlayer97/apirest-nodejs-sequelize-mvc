@@ -1,5 +1,6 @@
 const { Proyecto } = require("../models");
 const validatorjs = require("validatorjs");
+const pager = require("../helpers/paginator.helper");
 
 module.exports.create = async (req, res) => {
   try {
@@ -41,4 +42,38 @@ module.exports.create = async (req, res) => {
   }
 }
 
+module.exports.findAll = async (req, res) => {
+  try {
+
+    const {
+      page,
+      items
+    } = req.query;
+
+    const queryWhere = {
+      isDeleted: 0
+    };
+
+    const count = await Proyecto.count({ where: queryWhere });
+
+    const paginator = pager(count, page, items);
+
+    const proyectos = await Proyecto.findAll({
+      limit: paginator.itemCount,
+      offset: paginator.offset,
+      where: queryWhere
+    });
+
+    return res.json({
+      proyectos
+    });
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });    
+  }
+}
 

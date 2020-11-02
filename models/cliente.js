@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       
       this.hasMany(models.Actividad, {
-        as: "actividades"
+        as: "actividades",
+        foreignKey: "clienteId"
       });
 
       this.belongsTo(models.TipoCredito, {
@@ -58,7 +59,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    regStatus: {
+    etapaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    clasificacionId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: 0
     },

@@ -3,28 +3,26 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Proyecto extends Model {
+  class Etapa extends Model {
 
     static associate(models) {
       
-      this.hasMany(models.Cliente, {
-        as: "clientes",
-        foreignKey: "proyectoId"
+      this.hasMany(models.Clasificacion, {
+        as: "clasificaciones",
+        foreignKey: "etapaId"
       });
 
     }
   };
-  Proyecto.init({
+  Etapa.init({
     name: DataTypes.STRING,
-    descripcion: DataTypes.STRING,
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     }
   }, {
     sequelize,
-    modelName: 'Proyecto',
-    tableName: "proyecto"
+    modelName: 'Etapa',
   });
-  return Proyecto;
+  return Etapa;
 };

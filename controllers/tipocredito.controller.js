@@ -1,5 +1,6 @@
 const { TipoCredito } = require("../models");
 const validatorjs = require("validatorjs");
+const pager = require("../helpers/paginator.helper");
 
 module.exports.create = async (req, res) => {
   try {
@@ -27,6 +28,55 @@ module.exports.create = async (req, res) => {
       message: "created",
       tipoCredito
     });
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });
+  }
+}
+
+module.exports.findAll = async (req, res) => {
+  try {
+
+    const {
+      page,
+      items
+    } = req.query;
+
+    const queryWhere = {
+      isDeleted: 0
+    };
+
+    const count = await TipoCredito.count({ where: queryWhere });
+
+    const paginator = pager(count, page, items);
+
+    const tiposCredito = await TipoCredito.findAll({
+      limit: paginator.itemCount,
+      offset: paginator.offset,
+      where: queryWhere
+    });
+
+    return res.json({
+      tiposCredito
+    });
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });
+  }
+}
+
+module.exports.findOne = async (req, res) => {
+  try {
+
+    
     
   } catch (e) {
     console.log(e);

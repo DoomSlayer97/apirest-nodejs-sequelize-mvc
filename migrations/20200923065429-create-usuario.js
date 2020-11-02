@@ -14,9 +14,10 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      regStatus: {
+      isDeleted: {
         type: Sequelize.BOOLEAN,
-        defaultValue: 0
+        defaultValue: 0,
+        allowNull: false
       },
       password: {
         type: Sequelize.STRING,

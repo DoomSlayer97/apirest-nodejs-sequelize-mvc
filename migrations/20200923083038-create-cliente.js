@@ -40,9 +40,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      regStatus: {
+      etapaId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      isDeleted: {
         type: Sequelize.BOOLEAN,
-        defaultValue: 0
+        defaultValue: 0,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

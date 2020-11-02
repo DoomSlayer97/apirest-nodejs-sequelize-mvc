@@ -1,5 +1,6 @@
 const { Comentario } = require("../models");
 const validatorjs = require("validatorjs");
+const db = require("../helpers/mysql.helper");
 
 module.exports.create = async (req, res) => {
   
@@ -18,7 +19,7 @@ module.exports.create = async (req, res) => {
       parentId: "required|integer",
     });
 
-    if (validator) return res.status(500).json({
+    if (validator.fails()) return res.status(500).json({
       message: "invalid_params",
       errors: validator.errors.errors
     });
@@ -110,4 +111,22 @@ module.exports.findChildrenByParent = async (req, res) => {
 
   }
 
+}
+
+module.exports.findComentariosRaw = async (req, res) => {
+  try {
+
+    const comentarios = await db("select * from comentario");
+
+    return res.json({
+      comentarios
+    });
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });
+  }
 }

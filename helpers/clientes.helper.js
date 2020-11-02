@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const sequelize = require("sequelize");
 
 module.exports.queryFilter = (req) => {
 
@@ -11,7 +12,7 @@ module.exports.queryFilter = (req) => {
   } = req.body;
 
   let whereDynamic = {
-    regStatus: false
+    isDeleted: false
   };
 
   if (nombre)
@@ -23,7 +24,7 @@ module.exports.queryFilter = (req) => {
         sequelize.col("apellidoPat"),
         " ",
         sequelize.col("apellidoMat"),
-      ), { [sequelize.Op.like]: `%${nombre}%` },
+      ), { [Op.like]: `%${nombre}%` },
     ); 
   
   if (email)
@@ -34,13 +35,7 @@ module.exports.queryFilter = (req) => {
   if (tel)
     whereDynamic.tel = {
       [Op.like]: `%${tel}%`
-    }
-  
-  if (tiposCredito)
-    whereDynamic.tipoCreditoId = {
-      [Op.like]: `%${tiposCredito}%`
     };
-  
   
   if (tiposCredito)
     whereDynamic.tipoCreditoId = {
@@ -51,6 +46,7 @@ module.exports.queryFilter = (req) => {
     whereDynamic.proyectoId = {
       [Op.in]: proyectos
     };
+
   
   return whereDynamic;
 

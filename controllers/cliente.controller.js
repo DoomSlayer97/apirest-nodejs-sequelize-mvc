@@ -1,6 +1,5 @@
 const { Cliente } = require("../models");
 const validatorjs = require("validatorjs");
-const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 const { clientesExcel } = require("../utils/excel.util");
 const faker = require("faker");
@@ -206,16 +205,31 @@ module.exports.findAll = async (req, res) => {
   
   try {
 
+    const {
+      page,
+      items
+    } = req.query;
+
+    const pagination = pager(
+      await Cliente.count({ where: { isDeleted: 0 } }),
+        page,
+        items
+    );
+    
     const clientes = await Cliente.findAll({
+      limit: pagination.itemCount,
+      offse: pagination.offset,
       where: {
-        regStatus: 0
+        isDeleted: 0
       },
+      include: ["tipoCredito"],
       attributes: [
         'id',
         'email',
         'tel',
         'rfc',
         'fechaNacimiento',
+        [sequelize.literal("tipoCredito.name"), "tipodeCreditoNombre"],
         [sequelize.literal(" concat(nombres, ' ', apellidoPat, ' ', apellidoMat) "), "clienteNombre"]
       ]
     });
@@ -245,7 +259,7 @@ module.exports.findOne = async (req, res) => {
     const cliente = await Cliente.findOne({
       where: {
         id,
-        regStatus: 0
+        isDeleted: 0
       }
     });
 
@@ -332,7 +346,7 @@ module.exports.deleteOne = async (req, res) => {
     const { id } = req.params;
 
     await Cliente.update({
-      regStatus: 1
+      isDeleted: 1
     }, { where: { id } });
 
     return res.status(200).json({

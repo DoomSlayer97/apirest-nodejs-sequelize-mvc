@@ -11,7 +11,7 @@ const usuarioController = require("../controllers/usuario.controller");
 routes.post("/auth", usuarioController.auth);
 
 routes.use("/usuarios/", jwtAuthMiddleware, apiRoutes.usuariosRoutes);
-routes.use("/clientes/", apiRoutes.clientesRoutes);
+routes.use("/clientes/", jwtAuthMiddleware ,apiRoutes.clientesRoutes);
 routes.use("/actividades/", jwtAuthMiddleware, apiRoutes.actividadesRoutes);
 routes.use("/comentarios/", jwtAuthMiddleware, apiRoutes.comentariosRoutes);
 routes.use("/tiposcreditos/", jwtAuthMiddleware, apiRoutes.tipoCreditoRoutes);

@@ -38,6 +38,11 @@ module.exports = {
       usuarioId: {
         type: Sequelize.INTEGER
       },
+      isDeleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: 0,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
