@@ -11,6 +11,10 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      etapaId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       isDeleted: {
         type: Sequelize.BOOLEAN,
         defaultValue: 0,

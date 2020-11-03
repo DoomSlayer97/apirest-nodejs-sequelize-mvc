@@ -1,37 +1,30 @@
-const { Proyecto } = require("../models");
+const { Etapa } = require("../models");
 const validatorjs = require("validatorjs");
 const pager = require("../helpers/paginator.helper");
-const { update } = require("./clasificacion.controller");
 
 module.exports.create = async (req, res) => {
   try {
 
     const {
-      name,
-      descripcion
+      name
     } = req.body;
 
     const validator = new validatorjs(req.body, {
       name: "required|string"
     });
-    
+
     if (validator.fails()) return res.status(500).json({
       message: "invalid_params",
       errors: validator.errors.errors
     });
 
-    const proyecto = await Proyecto.create({
-      name,
-      descripcion
-    });
-
-    if (!proyecto) return res.status(500).json({
-      message: "created_error"
+    const etapa = await Etapa.create({
+      name
     });
 
     return res.status(201).json({
       message: "created",
-      proyecto
+      etapa
     });
     
   } catch (e) {
@@ -51,22 +44,20 @@ module.exports.findAll = async (req, res) => {
       items
     } = req.query;
 
-    const queryWhere = {
-      isDeleted: 0
-    };
-
-    const count = await Proyecto.count({ where: queryWhere });
+    let count = await Etapa.count({ where: { isDeleted: 0 } });
 
     const paginator = pager(count, page, items);
 
-    const proyectos = await Proyecto.findAll({
+    const etapas = await Etapa.findAll({
       limit: paginator.itemCount,
       offset: paginator.offset,
-      where: queryWhere
+      where: {
+        isDeleted: 0
+      }
     });
 
     return res.json({
-      proyectos
+      etapas
     });
     
   } catch (e) {
@@ -74,7 +65,7 @@ module.exports.findAll = async (req, res) => {
 
     return res.status(500).json({
       message: "internal_error"
-    });    
+    });
   }
 }
 
@@ -82,11 +73,11 @@ module.exports.findOne = async (req, res) => {
   try {
 
     const { id } = req.params;
-
-    const proyecto = await Proyecto.findOne({ where: { id } });
+    
+    const etapa = await Etapa.findOne({ where: { id } });
 
     return res.json({
-      proyecto
+      etapa
     });
     
   } catch (e) {
@@ -102,8 +93,7 @@ module.exports.update = async (req, res) => {
   try {
 
     const {
-      name,
-      descripcion
+      name
     } = req.body;
 
     const { id } = req.params;
@@ -111,24 +101,23 @@ module.exports.update = async (req, res) => {
     const validator = new validatorjs(req.body, {
       name: "required|string"
     });
-    
+
     if (validator.fails()) return res.status(500).json({
       message: "invalid_params",
       errors: validator.errors.errors
     });
 
-    const updated = await Proyecto.update({
-      name,
-      descripcion
+    const update = await Etapa.update({
+      name
     }, { where: { id } });
 
-    if (!updated) return res.status(500).json({
+    if (!update) res.status(500).json({
       message: "update_error"
     });
-    
+
     return res.json({
       message: "updated"
-    })
+    });
     
   } catch (e) {
     console.log(e);
@@ -139,29 +128,7 @@ module.exports.update = async (req, res) => {
   }
 }
 
-module.exports.deleteOne = async (req, res) => {
-  try {
 
-    const { id } = req.params;
 
-    const deleted = await Proyecto.update({
-      isDeleted: 1
-    }, { where: { id } });
 
-    if (!deleted) return res.status(500).json({
-      message: "delete_error"
-    });
-
-    return res.json({
-      message: "deleted"
-    })
-    
-  } catch (e) {
-    console.log(e);
-
-    return res.status(500).json({
-      message: "internal_error"
-    });
-  }
-}
 

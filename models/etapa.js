@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "etapaId"
       });
 
+      this.hasMany(models.Cliente, {
+        as: "clientes",
+        foreignKey: "etapaId"
+      });
+
     }
   };
   Etapa.init({
@@ -21,8 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false
     }
   }, {
-    sequelize,
-    modelName: 'Etapa',
+      sequelize,
+      tableName: "etapas",
+      modelName: 'Etapa',
   });
   return Etapa;
 };

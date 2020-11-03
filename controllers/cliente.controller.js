@@ -20,6 +20,7 @@ module.exports.generateThousandRegs = async (req, res) => {
         email: faker.internet.email(),
         tel: faker.phone.phoneNumber(),
         fechaNacimiento: new Date(),
+        etapaId: 1,
         tipoCreditoId: 1,
         proyectoId: 1
       });
@@ -171,7 +172,8 @@ module.exports.findAllFilter = async (req, res) => {
       where: queryParams,
       include: [
         {
-          association: "proyecto"
+          association: "etapa",
+          attributes: ["name", "id"]
         }
       ],
       attributes: [
@@ -361,8 +363,9 @@ module.exports.deleteOne = async (req, res) => {
       message: "internal_error"
     });
 
-
   }
 
 }
+
+
 

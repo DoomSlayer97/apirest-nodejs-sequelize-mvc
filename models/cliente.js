@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+
+      this.belongsTo(models.Etapa, {
+        as: "etapa",
+        foreignKey: "etapaId"
+      });
       
       this.hasMany(models.Actividad, {
         as: "actividades",
@@ -60,10 +65,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     etapaId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    clasificacionId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

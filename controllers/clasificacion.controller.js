@@ -123,13 +123,12 @@ module.exports.update = async (req, res) => {
       etapaId
     }, { where: { id } });
     
-    
     if (!clasificacion) return res.status(500).json({
-      message: "save_error"
+      message: "update_error"
     });
 
     return res.status(201).json({
-      message: "save"
+      message: "updated"
     });
     
   } catch (e) {
@@ -151,7 +150,7 @@ module.exports.deleteOne = async (req, res) => {
     }, { where: { id } });
 
     if (!clasificacion) return res.status(500).json({
-      message: "error_delete"
+      message: "delete_error"
     });
 
     return res.json({
