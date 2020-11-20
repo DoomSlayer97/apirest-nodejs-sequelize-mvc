@@ -5,8 +5,8 @@ module.exports = {
     await queryInterface.bulkInsert("etapas", [
       
       { name: "Lead", createdAt: new Date(), updatedAt: new Date() },
-      { name: "Lead", createdAt: new Date(), updatedAt: new Date() },
-      { name: "Lead", createdAt: new Date(), updatedAt: new Date() },
+      { name: "Prospecto", createdAt: new Date(), updatedAt: new Date() },
+      { name: "Visita", createdAt: new Date(), updatedAt: new Date() },
     ])
   },
 

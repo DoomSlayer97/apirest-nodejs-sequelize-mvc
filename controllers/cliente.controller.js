@@ -6,6 +6,11 @@ const faker = require("faker");
 const pager = require("../helpers/paginator.helper");
 const { queryFilter } = require("../helpers/clientes.helper");
 
+function randomNumber(min, max) {
+  return parseInt(Math.random() * (max - min) + min);
+}
+
+
 module.exports.generateThousandRegs = async (req, res) => {
   try {
 
@@ -20,7 +25,7 @@ module.exports.generateThousandRegs = async (req, res) => {
         email: faker.internet.email(),
         tel: faker.phone.phoneNumber(),
         fechaNacimiento: new Date(),
-        etapaId: 1,
+        clasificacionId: randomNumber(1, 7),
         tipoCreditoId: 1,
         proyectoId: 1
       });
@@ -160,7 +165,7 @@ module.exports.findAllFilter = async (req, res) => {
       items
     } = req.query;
 
-    const queryParams = queryFilter(req);
+    const queryParams = await queryFilter(req);
     
     const clientesCount = await Cliente.count({ where: queryParams });
 
@@ -172,7 +177,27 @@ module.exports.findAllFilter = async (req, res) => {
       where: queryParams,
       include: [
         {
-          association: "etapa",
+          association: "clasificacion",
+          attributes: ["name", "id"],
+          where: {
+            id: req.body.clasificaciones
+          },
+          include: [
+            {
+              association: "etapa",
+              attributes: ["name", "id"],
+              where: {
+                id: req.body.etapas
+              }
+            }
+          ]
+        },
+        {
+          association: "tipoCredito",
+          attributes: ["name", "id"]
+        },
+        {
+          association: "proyecto",
           attributes: ["name", "id"]
         }
       ],

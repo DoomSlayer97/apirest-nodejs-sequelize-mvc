@@ -128,7 +128,31 @@ module.exports.update = async (req, res) => {
   }
 }
 
+module.exports.deleteOne = async (req, res) => {
+  try {
 
+    const { id } = req.params;
+
+    const deleted = await Etapa.update({
+      isDeleted: 1
+    }, { where: { id } });
+
+    if (!deleted) return res.status(500).json({
+      message: "delete_error"
+    });
+
+    return res.json({
+      message: "deleted"
+    });
+    
+  } catch (e) {
+    console.log(e);
+
+    return res.status(500).json({
+      message: "internal_error"
+    });
+  }
+}
 
 
 

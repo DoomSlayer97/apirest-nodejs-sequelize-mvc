@@ -1,14 +1,20 @@
-const { Op } = require("sequelize");
+const { Op, literal } = require("sequelize");
 const sequelize = require("sequelize");
+const {
+  Clasificacion,
+  Etapa
+} = require("../models");
 
-module.exports.queryFilter = (req) => {
+module.exports.queryFilter = async (req) => {
 
   const {
     nombre,
     email,
     tel,
     tiposCredito,
-    proyectos
+    proyectos,
+    clasificaciones,
+    etapas
   } = req.body;
 
   let whereDynamic = {
@@ -38,16 +44,36 @@ module.exports.queryFilter = (req) => {
     };
   
   if (tiposCredito)
-    whereDynamic.tipoCreditoId = {
-      [Op.in]: tiposCredito
-    };
+    whereDynamic.tipoCreditoId = tiposCredito;
   
   if (proyectos)
-    whereDynamic.proyectoId = {
-      [Op.in]: proyectos
-    };
-
+    whereDynamic.proyectoId = proyectos;
   
+  /* if (etapas) {
+
+    let clasificacionesFiltro = [];
+
+    const findedEtapas = await Clasificacion.findAll({
+      where: {
+        etapaId: etapas
+      }
+    });
+
+    clasificacionesFiltro = findedEtapas.map(item => item.id);
+
+    if (clasificaciones) {
+
+      clasificacionesFiltro = clasificacionesFiltro.concat(clasificaciones);
+
+    }
+
+    whereDynamic.clasificacionId = {
+      [Op.in]: clasificacionesFiltro
+    };
+    
+  } */
+
+
   return whereDynamic;
 
 }

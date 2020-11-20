@@ -8,14 +8,20 @@ const jwtAuthMiddleware = require("../middleware/jwtAuth.middleware");
 
 const usuarioController = require("../controllers/usuario.controller");
 
+const apiRoutesMiddlewares = [
+  jwtAuthMiddleware
+];
+
 routes.post("/auth", usuarioController.auth);
 
-routes.use("/usuarios/", jwtAuthMiddleware, apiRoutes.usuariosRoutes);
-routes.use("/clientes/", jwtAuthMiddleware ,apiRoutes.clientesRoutes);
-routes.use("/actividades/", jwtAuthMiddleware, apiRoutes.actividadesRoutes);
-routes.use("/comentarios/", jwtAuthMiddleware, apiRoutes.comentariosRoutes);
-routes.use("/tiposcreditos/", jwtAuthMiddleware, apiRoutes.tipoCreditoRoutes);
-routes.use("/proyectos/", jwtAuthMiddleware, apiRoutes.proyectoRoutes);
+routes.use("/usuarios/", apiRoutesMiddlewares, apiRoutes.usuariosRoutes);
+routes.use("/clientes/", apiRoutesMiddlewares ,apiRoutes.clientesRoutes);
+routes.use("/actividades/", apiRoutesMiddlewares, apiRoutes.actividadesRoutes);
+routes.use("/comentarios/", apiRoutesMiddlewares, apiRoutes.comentariosRoutes);
+routes.use("/tiposcreditos/", apiRoutesMiddlewares, apiRoutes.tipoCreditoRoutes);
+routes.use("/proyectos/", apiRoutesMiddlewares, apiRoutes.proyectoRoutes);
+routes.use("/etapas/", apiRoutesMiddlewares, apiRoutes.etapaRoutes);
+routes.use("/clasificaciones/", apiRoutesMiddlewares, apiRoutes.clasificacionRoutes);
 
 module.exports = routes;
 

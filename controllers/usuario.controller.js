@@ -3,7 +3,7 @@ const validatorjs = require("validatorjs");
 const bcrypt = require("bcrypt");
 const app = require("../config/app");
 const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize")
+const { Op } = require("sequelize");
 
 module.exports.auth = async (req, res) => {
 

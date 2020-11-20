@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   };
   Proyecto.init({
     name: DataTypes.STRING,
-    descripcion: DataTypes.STRING,
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

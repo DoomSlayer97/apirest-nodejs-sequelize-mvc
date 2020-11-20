@@ -40,6 +40,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      clasificacionId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       etapaId: {
         type: Sequelize.INTEGER,
         allowNull: false
